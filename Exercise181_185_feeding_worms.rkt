@@ -54,14 +54,16 @@
                                               
 
 (define (food-eaten? g)
-  (and (equal? (food-pos-x (game-food-pos g)) (wormheadp-x (game-wormheadp g)))
-        (equal? (food-pos-y (game-food-pos g)) (wormheadp-y (game-wormheadp g)))))  
+  (and (and (> (+ (food-pos-x (game-food-pos g)) 3) (wormheadp-x (game-wormheadp g)))
+            (< (- (food-pos-x (game-food-pos g)) 3) (wormheadp-x (game-wormheadp g))))
+       (and (> (+ (food-pos-y (game-food-pos g)) 3) (wormheadp-y (game-wormheadp g)))
+            (< (- (food-pos-y (game-food-pos g)) 3) (wormheadp-y (game-wormheadp g))))))
 
 (define BG-AREA-SIDE-LENGTH 100)
 (define GB (empty-scene BG-AREA-SIDE-LENGTH
                         BG-AREA-SIDE-LENGTH))
-(define WORM-BODY (circle 1 "solid" "red"))
-(define DIRECTION-SEGMENT-MULTIPLIER 1)
+(define WORM-BODY (circle 2 "solid" "red"))
+(define DIRECTION-SEGMENT-MULTIPLIER 2)
 
 (define (render-tails headp tails)
   (cond
@@ -79,7 +81,7 @@
 
 (define (render g)
   (place-image
-   (rectangle 1 1 "solid" "green")
+   (rectangle 3 3 "solid" "green")
    (food-pos-x (game-food-pos g))
    (food-pos-x (game-food-pos g))
   (place-image
@@ -140,7 +142,7 @@
 
 (define (main g)
   (big-bang g
-            [on-tick move]
+            [on-tick move 0.05]
             [on-key change-direction]
             [to-draw render]
             [stop-when hit-obstacle last-scene]))
